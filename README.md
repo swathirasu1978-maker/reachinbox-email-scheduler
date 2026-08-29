@@ -1,6 +1,26 @@
 # ReachInbox Email Scheduler
 
 A full-stack email scheduling system built for the ReachInbox/Outbox Labs assignment.
+# ReachInbox Email Scheduler
+
+A full-stack email scheduling and campaign management application built for the ReachInbox Software Development Intern Assignment.
+
+The application allows users to create email campaigns, schedule emails, process them asynchronously using BullMQ and Redis, and send emails through Ethereal SMTP.
+
+## Features
+
+- User authentication
+- Email campaign creation
+- Scheduled email sending
+- BullMQ + Redis background job processing
+- Email rate limiting
+- Ethereal Email integration
+- Email preview URL
+- Sent email tracking
+- MySQL/PostgreSQL database support
+- React frontend
+- TypeScript backend
+- Docker support
 
 ## Stack
 
