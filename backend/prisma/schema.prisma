@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum EmailStatus {
+  SCHEDULED
+  PROCESSING
+  SENT
+  FAILED
+}
+
+model User {
+  id          String        @id @default(cuid())
+  googleId    String?       @unique
+  email       String        @unique
+  name        String
+  avatarUrl   String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  senders     Sender[]
+  emails      Email[]
+  slack       SlackConnection?
+}
+
+model Sender {
+  id          String   @id @default(cuid())
+  userId      String
+  email       String
+  displayName String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emails      Email[]
+  @@unique([userId, email])
+}
+
+model Email {
+  id             String      @id @default(cuid())
+  userId         String
+  senderId       String
+  recipient      String
+  subject        String
+  body           String      @db.Text
+  scheduledAt    DateTime
+  sentAt         DateTime?
+  status         EmailStatus @default(SCHEDULED)
+  errorMessage   String?     @db.Text
+  previewUrl     String?     @db.Text
+  attempts       Int         @default(0)
+  jobId          String      @unique
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sender         Sender      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  @@index([userId, status])
+  @@index([recipient])
+  @@index([scheduledAt])
+}
+
+model SlackConnection {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  accessToken  String   @db.Text
+  teamId       String?
+  teamName     String?
+  channelId    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

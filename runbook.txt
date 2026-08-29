@@ -1,0 +1,28 @@
+PLACEMENT DEMO RUNBOOK
+
+1. docker compose up -d
+2. backend: copy .env.example .env
+3. Add Google, Ethereal and Slack credentials.
+4. cd backend
+5. npm install
+6. npx prisma generate
+7. npx prisma migrate dev --name init
+8. npm run dev
+9. Open another terminal: cd backend && npm run worker
+10. cd frontend && copy .env.example .env && npm install && npm run dev
+
+Demo:
+- Google login
+- Compose
+- Upload sample-data/leads.csv
+- Set a future start time
+- Delay 2000ms
+- Hourly limit 2
+- Schedule
+- Show Scheduled Emails
+- Show Bull Board
+- Wait for first jobs
+- Show Sent Emails and Ethereal preview in worker terminal
+- Connect Slack before the third email to demonstrate notification
+- Stop backend/worker, restart them, show future delayed job remains in BullMQ
+- Search recipient/subject in Search Emails
