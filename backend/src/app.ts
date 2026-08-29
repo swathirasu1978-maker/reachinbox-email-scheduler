@@ -1,4 +1,5 @@
 
+
 import express from "express";
 import cors from "cors";
 import session from "express-session";
@@ -17,6 +18,8 @@ import { emailRouter } from "./controllers/email.controller";
 import { slackRouter } from "./controllers/slack.controller";
 
 export const app = express();
+
+app.set("trust proxy", 1);
 
 app.use(
   cors({
