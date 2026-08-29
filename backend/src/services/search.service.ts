@@ -1,10 +1,17 @@
 import { Client } from "@elastic/elasticsearch";
 import { env } from "../config/env";
 
-export const elastic = new Client({ node: env.ELASTICSEARCH_URL });
+const elastic = env.ELASTICSEARCH_URL
+  ? new Client({ node: env.ELASTICSEARCH_URL })
+  : null;
 
 export async function ensureIndex() {
-  const exists = await elastic.indices.exists({ index: env.ELASTICSEARCH_INDEX });
+  if (!elastic) return;
+
+  const exists = await elastic.indices.exists({
+    index: env.ELASTICSEARCH_INDEX
+  });
+
   if (!exists) {
     await elastic.indices.create({
       index: env.ELASTICSEARCH_INDEX,
@@ -25,7 +32,10 @@ export async function ensureIndex() {
 }
 
 export async function indexEmail(email: any) {
+  if (!elastic) return;
+
   await ensureIndex();
+
   await elastic.index({
     index: env.ELASTICSEARCH_INDEX,
     id: email.id,
@@ -44,21 +54,27 @@ export async function indexEmail(email: any) {
 }
 
 export async function searchEmails(userId: string, q: string) {
+  if (!elastic) return [];
+
   await ensureIndex();
+
   const result = await elastic.search({
     index: env.ELASTICSEARCH_INDEX,
     query: {
       bool: {
-        must: [{
-          multi_match: {
-            query: q,
-            fields: ["recipient^3", "subject^2", "body"]
+        must: [
+          {
+            multi_match: {
+              query: q,
+              fields: ["recipient^3", "subject^2", "body"]
+            }
           }
-        }],
+        ],
         filter: [{ term: { userId } }]
       }
     },
     sort: [{ scheduledAt: "desc" }]
   });
+
   return result.hits.hits.map((hit: any) => hit._source);
 }

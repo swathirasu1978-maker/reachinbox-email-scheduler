@@ -14,7 +14,7 @@ const schema = z.object({
   ETHEREAL_USER: z.string().default(""),
   ETHEREAL_PASS: z.string().default(""),
   DEFAULT_FROM_EMAIL: z.string().default("ReachInbox Demo <no-reply@example.test>"),
-  ELASTICSEARCH_URL: z.string().default("http://localhost:9200"),
+  ELASTICSEARCH_URL: z.string().optional(),
   ELASTICSEARCH_INDEX: z.string().default("emails"),
   WORKER_CONCURRENCY: z.coerce.number().default(5),
   MIN_SEND_DELAY_MS: z.coerce.number().default(2000),
