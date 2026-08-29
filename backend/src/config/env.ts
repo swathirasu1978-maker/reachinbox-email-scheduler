@@ -27,3 +27,14 @@ const schema = z.object({
 });
 
 export const env = schema.parse(process.env);
+
+//cd reachinbox-email-scheduler
+//cd backend
+//npm run dev
+
+//cd "C:\Users\rahul\Downloads\reachinbox-email-scheduler-company-ui\reachinbox-email-scheduler"
+//dir
+//cd frontend
+//npm install
+//npm run dev
+//http://localhost:5173
